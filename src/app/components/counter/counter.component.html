@@ -1,0 +1,15 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>
+      <app-counter-output></app-counter-output> <!--[counter]="counter" no longer needed wth ngrx store-->
+    </ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content>
+    <app-counter-buttons></app-counter-buttons> <!--(increment)="onIncrement()" (decrement)="onDecrement()" (reset)="onReset()"-->
+  </ion-card-content>
+
+  <ion-card-content>
+    <app-custom-counter-input></app-custom-counter-input>
+  </ion-card-content>
+</ion-card>

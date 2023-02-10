@@ -1,0 +1,11 @@
+<div>
+  <ion-header>
+    <ion-title>{{name | async}}</ion-title>
+  </ion-header>
+  <ion-item>
+    <ion-label position="floating">Provide custom value to increment/decrement</ion-label>
+    <ion-input type="number" [(ngModel)]="value" placeholder="Your value"></ion-input>
+  </ion-item>
+  <ion-button (click)="onAdd()" color="dark" size="small">Add to counter</ion-button>
+  <ion-button (click)="changeText('New Name')" color="tertiary" size="small">Change Text</ion-button>
+</div>
