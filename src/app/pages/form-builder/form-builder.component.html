@@ -1,0 +1,88 @@
+<ul class="form-fields">
+  <li>
+    <ion-button id="open-modal" color="primary" size="small">
+      <ion-icon name="text-outline"></ion-icon>
+      <span style="padding-inline: 12px;">Add Text Field</span>
+    </ion-button>
+  </li>
+</ul>
+
+<ul *ngFor="let textField of textArray; let i = index" appDragDropSwap [elemPosition]="i" [list]="textArray" (returnUpdatedList)="returnUpdatedList($event)">
+  <li style="cursor: all-scroll">
+    <app-text-field
+      [labelTxt]="textField.label"
+      [placeholder]="textField.placeholder"
+      [validations]="textField.validations"
+    >
+    </app-text-field>
+  </li>
+</ul>
+
+<ion-modal trigger="open-modal">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="cancel()">Cancel</ion-button>
+        </ion-buttons>
+        <ion-title style="text-align: center;">Text Field</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <form [formGroup]="inputDataForm">
+        <h4>Attributes</h4>
+        <ion-item>
+          <ion-label position="stacked">Input Label</ion-label>
+          <ion-input type="text" placeholder="Label" formControlName="label"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Input Placeholder</ion-label>
+          <ion-input type="text" placeholder="Placeholder" formControlName="placeholder"></ion-input>
+        </ion-item>
+        <h4>Validations</h4>
+        <ng-container formArrayName="validations">
+          <ng-container *ngFor="let validForm of validations.controls; let i = index">
+            <form [formGroupName]="i">
+              <div style="padding: 8px 0px 12px 0px">
+                <ion-item>
+                  <ion-label style="font-size: 13px;">Required?</ion-label>
+                  <ion-checkbox formControlName="required" slot="start"></ion-checkbox>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="stacked">Custom Message <span style="font-size: 12px;">(optional)</span></ion-label>
+                  <ion-input type="text" placeholder="Error message for required" formControlName="requiredMessage"></ion-input>
+                </ion-item>
+              </div>
+              <div style="padding: 8px 0px 12px 0px">
+                <ion-item>
+                  <ion-label position="stacked">Minimum length <span style="font-size: 12px;">(optional)</span></ion-label>
+                  <ion-input type="text" placeholder="Minlength" formControlName="minlength"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="stacked">Custom Message <span style="font-size: 12px;">(optional)</span></ion-label>
+                  <ion-input type="text" placeholder="Error message for min length" formControlName="minLengthMessage"></ion-input>
+                </ion-item>
+              </div>
+              <div style="padding: 8px 0px 12px 0px">
+                <ion-item>
+                  <ion-label position="stacked">Maximum length</ion-label>
+                  <ion-input type="text" placeholder="Maxlength" formControlName="maxlength"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="stacked">Custom Message</ion-label>
+                  <ion-input type="text" placeholder="Error message for max length" formControlName="maxLengthMessage"></ion-input>
+                </ion-item>
+              </div>
+            </form>
+          </ng-container>
+        </ng-container>
+        <ion-button (click)="submitForm()" type="submit" color="primary" size="small">
+          Submit
+        </ion-button>
+      </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>

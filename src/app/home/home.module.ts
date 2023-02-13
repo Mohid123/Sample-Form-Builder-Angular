@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
@@ -13,12 +13,17 @@ import { CustomCounterInputComponent } from '../components/custom-counter-input/
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
 import { AppReducer } from '../store/store.state';
+import { FormBuilderComponent } from '../pages/form-builder/form-builder.component';
+import { TextFieldComponent } from '../form-components/text-field/text-field.component';
+import { DragDropSwapDirective } from '../directives/dragAndDrop.directive';
 
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    DragDropSwapDirective,
+    ReactiveFormsModule,
     IonicModule,
     HomePageRoutingModule,
     StoreModule.forRoot(AppReducer),
@@ -32,6 +37,6 @@ import { AppReducer } from '../store/store.state';
       }
     })
   ],
-  declarations: [HomePage, CounterComponent, CounterOutputComponent, CounterButtonsComponent, CustomCounterInputComponent]
+  declarations: [HomePage, TextFieldComponent, CounterComponent, CounterOutputComponent, CounterButtonsComponent, CustomCounterInputComponent, FormBuilderComponent]
 })
 export class HomePageModule {}

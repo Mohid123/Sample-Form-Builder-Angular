@@ -9,3 +9,28 @@
   <ion-button (click)="onAdd()" color="dark" size="small">Add to counter</ion-button>
   <ion-button (click)="changeText('New Name')" color="tertiary" size="small">Change Text</ion-button>
 </div>
+
+<div>
+  <ion-list *ngFor="let post of posts | async">
+    <ion-item>
+      <ion-label>{{post.title}} ----- {{[post.description]}}</ion-label>
+    </ion-item>
+  </ion-list>
+</div>
+
+<form [formGroup]="postForm">
+  <ion-item fill="outline">
+    <ion-label position="floating">Title</ion-label>
+    <ion-input formControlName="title" placeholder="Enter title"></ion-input>
+  </ion-item>
+  <br>
+  <ion-item fill="outline">
+    <ion-label position="floating">Description</ion-label>
+    <ion-input formControlName="description" placeholder="Enter description"></ion-input>
+  </ion-item>
+  <br>
+  <ion-button color="danger" type="submit">
+    <ion-icon name="document-attach-outline"></ion-icon>
+    Submit
+  </ion-button>
+</form>

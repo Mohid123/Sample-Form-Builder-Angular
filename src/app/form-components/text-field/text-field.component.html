@@ -1,0 +1,34 @@
+<div *ngIf="labelTxt" class="text-field">
+  <label class="text-field-label">{{labelTxt}}</label>
+  <input [formControl]="f" type="text" [placeholder]="placeholder"/>
+</div>
+<div style="padding: 4px 0px 2px 0px;">
+  <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+    validation: requiredValidation.validationType,
+    message: requiredValidation.validationMessage ?? 'This field is required',
+    control: f
+  }">
+  </ng-container>
+  <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+    validation: minLengthValidation.validationType,
+    message: minLengthValidation.validationMessage,
+    control: f
+  }">
+  </ng-container>
+  <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+    validation: maxLengthValidation.validationType,
+    message: maxLengthValidation.validationMessage,
+    control: f
+  }">
+  </ng-container>
+</div>
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  <ng-container *ngIf="f.hasError(validation) && f.dirty">
+    <div class="error-msg">
+      <span style="color: red" role="alert">
+        {{ message }}
+      </span>
+    </div>
+  </ng-container>
+</ng-template>
