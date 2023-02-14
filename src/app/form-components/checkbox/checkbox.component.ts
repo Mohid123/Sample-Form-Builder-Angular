@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 
@@ -8,16 +8,14 @@ interface ValidationObj {
 }
 
 @Component({
-  selector: 'app-text-field',
-  templateUrl: './text-field.component.html',
-  styleUrls: ['./text-field.component.scss'],
+  selector: 'app-checkbox',
+  templateUrl: './checkbox.component.html',
+  styleUrls: ['./checkbox.component.scss'],
 })
-export class TextFieldComponent implements OnInit, OnDestroy {
+export class CheckboxComponent implements OnInit {
 
   @Input() labelTxt!: string;
-  @Input() type!: string;
   @Input() validations!: BehaviorSubject<any[]>;
-  @Input() placeholder!: string;
   @Output() editField = new EventEmitter<void>();
   @Output() removeField = new EventEmitter<void>();
   textFieldControl: FormControl = new FormControl(null);
@@ -46,18 +44,6 @@ export class TextFieldComponent implements OnInit, OnDestroy {
         this.f.addValidators(Validators.required);
         this.requiredValidation.validationType = 'required';
         this.requiredValidation.validationMessage = val.requiredMessage;
-        this.f.updateValueAndValidity({onlySelf: true})
-      }
-      if(val.maxlength) {
-        this.f.addValidators(Validators.maxLength(Number(val.maxlength)));
-        this.maxLengthValidation.validationType = 'maxlength'
-        val.maxLengthMessage ? this.maxLengthValidation.validationMessage = val.maxLengthMessage : this.maxLengthValidation.validationMessage = `A maximum of ${val.maxlength} characters are allowed`;
-        this.f.updateValueAndValidity({onlySelf: true})
-      }
-      if(val.minlength) {
-        this.f.addValidators(Validators.minLength(Number(val.minlength)));
-        this.minLengthValidation.validationType = 'minlength';
-        val.minLengthMessage ? this.minLengthValidation.validationMessage = val.minLengthMessage : this.minLengthValidation.validationMessage = `Please provide at least ${val.minlength} characters`;
         this.f.updateValueAndValidity({onlySelf: true})
       }
     })

@@ -1,0 +1,36 @@
+<div *ngIf="values.length > 0" class="text-field">
+  <div style="display: flex; justify-content: end;">
+    <div style="cursor: pointer;">
+      <ion-icon (click)="setEditFields()" name="settings-outline"></ion-icon>
+      <ion-icon (click)="setRemoveField()" name="close-circle-outline"></ion-icon>
+    </div>
+  </div>
+  <ion-list>
+    <ion-radio-group value="">
+      <ng-container *ngFor="let val of values">
+        <ion-item>
+          <ion-label>{{val.radioLabel}}</ion-label>
+          <ion-radio slot="end" [value]="val.radioValue"></ion-radio>
+        </ion-item>
+      </ng-container>
+    </ion-radio-group>
+  </ion-list>
+</div>
+<div style="padding: 4px 0px 2px 0px;">
+  <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+    validation: requiredValidation.validationType,
+    message: requiredValidation.validationMessage ?? 'Please select at least one value',
+    control: f
+  }">
+  </ng-container>
+</div>
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  <ng-container *ngIf="f.hasError(validation) && f.dirty">
+    <div class="error-msg">
+      <span style="color: red" role="alert">
+        {{ message }}
+      </span>
+    </div>
+  </ng-container>
+</ng-template>

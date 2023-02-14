@@ -1,22 +1,78 @@
-<ul class="form-fields">
-  <li>
-    <ion-button id="open-modal" color="primary" size="small">
-      <ion-icon name="text-outline"></ion-icon>
-      <span style="padding-inline: 12px;">Add Text Field</span>
-    </ion-button>
-  </li>
-</ul>
-
-<ul *ngFor="let textField of textArray; let i = index" appDragDropSwap [elemPosition]="i" [list]="textArray" (returnUpdatedList)="returnUpdatedList($event)">
-  <li style="cursor: all-scroll">
-    <app-text-field
-      [labelTxt]="textField.label"
-      [placeholder]="textField.placeholder"
-      [validations]="textField.validations"
-    >
-    </app-text-field>
-  </li>
-</ul>
+<ion-grid>
+  <ion-row>
+    <ion-col size="4">
+      <ul class="form-fields">
+        <li>
+          <ion-button id="open-modal" color="primary" size="small">
+            <ion-icon name="add-circle-outline"></ion-icon>
+            <span style="padding-inline: 12px;">Add New Field</span>
+          </ion-button>
+        </li>
+      </ul>
+    </ion-col>
+    <ion-col size="8" style="padding-bottom: 80px;">
+      <ul *ngFor="let textField of textArray; let i = index" appDragDropSwap [elemPosition]="i" [list]="textArray" (returnUpdatedList)="returnUpdatedList($event)">
+        <li *ngIf="textField.type === 'text'" style="cursor: all-scroll">
+          <app-text-field
+            [type]="'text'"
+            [labelTxt]="textField.label"
+            [placeholder]="textField.placeholder"
+            [validations]="textField.validations"
+            (editField)="openModalEdit(i)"
+            (removeField)="removeTextField(i)"
+          >
+          </app-text-field>
+        </li>
+        <li *ngIf="textField.type === 'number'" style="cursor: all-scroll">
+          <app-text-field
+            [type]="'number'"
+            [labelTxt]="textField.label"
+            [placeholder]="textField.placeholder"
+            [validations]="textField.validations"
+            (editField)="openModalEdit(i)"
+            (removeField)="removeTextField(i)"
+          >
+          </app-text-field>
+        </li>
+        <li *ngIf="textField.type === 'text-area'" style="cursor: all-scroll">
+          <app-text-area-field
+            [labelTxt]="textField.label"
+            [placeholder]="textField.placeholder"
+            [validations]="textField.validations"
+            (editField)="openModalEdit(i)"
+            (removeField)="removeTextField(i)"
+          >
+          </app-text-area-field>
+        </li>
+        <li *ngIf="textField.type === 'checkbox'" style="cursor: all-scroll">
+          <app-checkbox
+            [labelTxt]="textField.label"
+            [validations]="textField.validations"
+            (editField)="openModalEdit(i)"
+            (removeField)="removeTextField(i)"
+          >
+          </app-checkbox>
+        </li>
+        <li *ngIf="textField.type === 'radio'" style="cursor: all-scroll">
+          <app-radio-group
+            [values]="textField.radioOptions"
+            [validations]="textField.validations"
+            (editField)="openModalEdit(i)"
+            (removeField)="removeTextField(i)"
+          >
+          </app-radio-group>
+        </li>
+      </ul>
+    </ion-col>
+    <!-- <ion-col>
+      <ion-card *ngIf="formValueToJson">
+        <ion-card-content>
+          {{formValueToJson | json}}
+        </ion-card-content>
+      </ion-card>
+    </ion-col> -->
+  </ion-row>
+</ion-grid>
 
 <ion-modal trigger="open-modal">
   <ng-template>
@@ -25,59 +81,117 @@
         <ion-buttons slot="start">
           <ion-button (click)="cancel()">Cancel</ion-button>
         </ion-buttons>
-        <ion-title style="text-align: center;">Text Field</ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
-        </ion-buttons>
+        <ion-title style="text-align: center; padding-right: 100px;">{{(editMode$ | async) ? 'Edit' : 'Add'}} Form Field</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
       <form [formGroup]="inputDataForm">
         <h4>Attributes</h4>
-        <ion-item>
+        <ion-list>
+          <ion-item>
+            <ion-select formControlName="type" placeholder="Input type">
+              <ion-select-option value="text">Text</ion-select-option>
+              <ion-select-option value="number">Number</ion-select-option>
+              <ion-select-option value="text-area">Text Area</ion-select-option>
+              <ion-select-option value="checkbox">Checkbox</ion-select-option>
+              <ion-select-option value="radio">Radio Group</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+
+        <!--LABEL-->
+
+        <ion-item *ngIf="inputDataForm.controls['type'].value !== 'radio'">
           <ion-label position="stacked">Input Label</ion-label>
           <ion-input type="text" placeholder="Label" formControlName="label"></ion-input>
         </ion-item>
-        <ion-item>
+
+        <!--PLACEHOLDER-->
+
+        <ion-item *ngIf="!['checkbox', 'radio'].includes(inputDataForm.controls['type'].value)">
           <ion-label position="stacked">Input Placeholder</ion-label>
           <ion-input type="text" placeholder="Placeholder" formControlName="placeholder"></ion-input>
         </ion-item>
-        <h4>Validations</h4>
-        <ng-container formArrayName="validations">
-          <ng-container *ngFor="let validForm of validations.controls; let i = index">
-            <form [formGroupName]="i">
-              <div style="padding: 8px 0px 12px 0px">
-                <ion-item>
-                  <ion-label style="font-size: 13px;">Required?</ion-label>
-                  <ion-checkbox formControlName="required" slot="start"></ion-checkbox>
-                </ion-item>
-                <ion-item>
-                  <ion-label position="stacked">Custom Message <span style="font-size: 12px;">(optional)</span></ion-label>
-                  <ion-input type="text" placeholder="Error message for required" formControlName="requiredMessage"></ion-input>
-                </ion-item>
-              </div>
-              <div style="padding: 8px 0px 12px 0px">
-                <ion-item>
-                  <ion-label position="stacked">Minimum length <span style="font-size: 12px;">(optional)</span></ion-label>
-                  <ion-input type="text" placeholder="Minlength" formControlName="minlength"></ion-input>
-                </ion-item>
-                <ion-item>
-                  <ion-label position="stacked">Custom Message <span style="font-size: 12px;">(optional)</span></ion-label>
-                  <ion-input type="text" placeholder="Error message for min length" formControlName="minLengthMessage"></ion-input>
-                </ion-item>
-              </div>
-              <div style="padding: 8px 0px 12px 0px">
-                <ion-item>
-                  <ion-label position="stacked">Maximum length</ion-label>
-                  <ion-input type="text" placeholder="Maxlength" formControlName="maxlength"></ion-input>
-                </ion-item>
-                <ion-item>
-                  <ion-label position="stacked">Custom Message</ion-label>
-                  <ion-input type="text" placeholder="Error message for max length" formControlName="maxLengthMessage"></ion-input>
-                </ion-item>
-              </div>
-            </form>
+
+        <!--VALIDATIONS-->
+
+        <ng-container *ngIf="inputDataForm.controls['type'].value">
+          <h4>Validations</h4>
+          <ng-container formArrayName="validations">
+            <ng-container *ngFor="let validForm of validations.controls; let i = index">
+              <form [formGroupName]="i">
+
+                <!--REQUIRED VALIDATION-->
+
+                <div style="padding: 8px 0px 12px 0px">
+                  <ion-item>
+                    <ion-label style="font-size: 13px;">Required?</ion-label>
+                    <ion-checkbox formControlName="required" slot="start"></ion-checkbox>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label position="stacked">Custom Message <span style="font-size: 12px;">(optional)</span></ion-label>
+                    <ion-input type="text" placeholder="Error message for required" formControlName="requiredMessage"></ion-input>
+                  </ion-item>
+                </div>
+
+                <!--MIN LENGTH VALIDATION-->
+
+                <div *ngIf="!['checkbox', 'radio'].includes(inputDataForm.controls['type'].value)" style="padding: 8px 0px 12px 0px">
+                  <ion-item>
+                    <ion-label position="stacked">Minimum length</ion-label>
+                    <ion-input type="text" placeholder="Minlength" formControlName="minlength"></ion-input>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label position="stacked">Custom Message <span style="font-size: 12px;">(optional)</span></ion-label>
+                    <ion-input type="text" placeholder="Error message for min length" formControlName="minLengthMessage"></ion-input>
+                  </ion-item>
+                </div>
+
+                <!--MAX LENGTH VALIDATION-->
+
+                <div *ngIf="!['checkbox', 'radio'].includes(inputDataForm.controls['type'].value)" style="padding: 8px 0px 12px 0px">
+                  <ion-item>
+                    <ion-label position="stacked">Maximum length</ion-label>
+                    <ion-input type="text" placeholder="Maxlength" formControlName="maxlength"></ion-input>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label position="stacked">Custom Message <span style="font-size: 12px;">(optional)</span></ion-label>
+                    <ion-input type="text" placeholder="Error message for max length" formControlName="maxLengthMessage"></ion-input>
+                  </ion-item>
+                </div>
+              </form>
+            </ng-container>
           </ng-container>
+
+          <!--RADIO GROUP OPTIONS-->
+
+          <div *ngIf="inputDataForm.controls['type'].value === 'radio'">
+            <ion-list style="padding-bottom: 80px;">
+              <h5>Radio Group Settings</h5>
+              <ng-container formArrayName="radioOptions">
+                <ng-container *ngFor="let radioForm of radioOptions.controls; let index = index">
+                  <form [formGroupName]="index">
+                    <div class="multi-radio">
+                      <ion-item>
+                        <ion-input formControlName="radioLabel" [clearInput]="true" placeholder="Radio Label"></ion-input>
+                      </ion-item>
+                      <ion-item>
+                        <ion-input formControlName="radioValue" [clearInput]="true" placeholder="Radio Value"></ion-input>
+                      </ion-item>
+                      <div *ngIf="index > 0" style="cursor: pointer; height: 20px; padding-top: 20px;">
+                        <ion-icon (click)="deleteOption(index)" name="trash-bin-outline" color="danger"></ion-icon>
+                      </div>
+                    </div>
+                  </form>
+                </ng-container>
+              </ng-container>
+              <ion-fab style="display: flex; justify-content: end;">
+                <ion-fab-button size="small">
+                  <ion-icon (click)="addMoreOptions()" name="add"></ion-icon>
+                </ion-fab-button>
+              </ion-fab>
+            </ion-list>
+          </div>
         </ng-container>
         <ion-button (click)="submitForm()" type="submit" color="primary" size="small">
           Submit

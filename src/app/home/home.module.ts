@@ -16,6 +16,9 @@ import { AppReducer } from '../store/store.state';
 import { FormBuilderComponent } from '../pages/form-builder/form-builder.component';
 import { TextFieldComponent } from '../form-components/text-field/text-field.component';
 import { DragDropSwapDirective } from '../directives/dragAndDrop.directive';
+import { TextAreaFieldComponent } from '../form-components/text-area-field/text-area-field.component';
+import { CheckboxComponent } from '../form-components/checkbox/checkbox.component';
+import { RadioGroupComponent } from '../form-components/radio-group/radio-group.component';
 
 
 @NgModule({
@@ -37,6 +40,17 @@ import { DragDropSwapDirective } from '../directives/dragAndDrop.directive';
       }
     })
   ],
-  declarations: [HomePage, TextFieldComponent, CounterComponent, CounterOutputComponent, CounterButtonsComponent, CustomCounterInputComponent, FormBuilderComponent]
+  declarations: [
+    HomePage,
+    TextFieldComponent,
+    CounterComponent,
+    CounterOutputComponent,
+    CounterButtonsComponent,
+    CustomCounterInputComponent,
+    FormBuilderComponent,
+    TextAreaFieldComponent,
+    CheckboxComponent,
+    RadioGroupComponent
+  ]
 })
 export class HomePageModule {}

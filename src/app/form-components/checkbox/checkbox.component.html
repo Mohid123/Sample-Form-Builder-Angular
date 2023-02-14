@@ -1,29 +1,19 @@
 <div *ngIf="labelTxt" class="text-field">
-  <div class="label-and-icons">
-    <label class="text-field-label">{{labelTxt}}</label>
-    <div>
+  <div style="display: flex; justify-content: end;">
+    <div style="cursor: pointer;">
       <ion-icon (click)="setEditFields()" name="settings-outline"></ion-icon>
       <ion-icon (click)="setRemoveField()" name="close-circle-outline"></ion-icon>
     </div>
   </div>
-  <input [formControl]="f" [type]="type" [placeholder]="placeholder"/>
+  <ion-item>
+    <ion-checkbox [formControl]="f" slot="start"></ion-checkbox>
+    <ion-label>{{labelTxt}}</ion-label>
+  </ion-item>
 </div>
 <div style="padding: 4px 0px 2px 0px;">
   <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
     validation: requiredValidation.validationType,
     message: requiredValidation.validationMessage ?? 'This field is required',
-    control: f
-  }">
-  </ng-container>
-  <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-    validation: minLengthValidation.validationType,
-    message: minLengthValidation.validationMessage,
-    control: f
-  }">
-  </ng-container>
-  <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-    validation: maxLengthValidation.validationType,
-    message: maxLengthValidation.validationMessage,
     control: f
   }">
   </ng-container>

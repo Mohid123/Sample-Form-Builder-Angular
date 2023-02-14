@@ -6,7 +6,7 @@
       <ion-icon (click)="setRemoveField()" name="close-circle-outline"></ion-icon>
     </div>
   </div>
-  <input [formControl]="f" [type]="type" [placeholder]="placeholder"/>
+  <textarea [formControl]="f" [placeholder]="placeholder" name="area" cols="60" rows="10"></textarea>
 </div>
 <div style="padding: 4px 0px 2px 0px;">
   <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
