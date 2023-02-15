@@ -11,4 +11,4 @@
 * Checkbox
 * Radio group
 
-### Project deployed [here](https://82b78bed.sample-form-builder-angular.pages.dev/home)
+### Project deployed [here](https://sample-form-builder-angular.pages.dev/home)
