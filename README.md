@@ -10,3 +10,5 @@
 * Number field
 * Checkbox
 * Radio group
+
+### Project deployed [here](https://82b78bed.sample-form-builder-angular.pages.dev/home)
