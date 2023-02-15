@@ -102,21 +102,31 @@ export class FormBuilderComponent implements OnInit {
 
   submitForm() {
     if(this.editMode.value === false) {
-      if(this.f['type'].value && this.f['label'].value && this.f['placeholder'].value) {
-        this.confirm();
-        this.textFieldValues = new TextFieldAttributes();
-        this.textFieldValues.type = this.inputDataForm.controls['type'].value;
-        this.textFieldValues.label = this.inputDataForm.controls['label'].value;
-        this.textFieldValues.placeholder = this.inputDataForm.controls['placeholder'].value;
-        this.textFieldValues.validations.next(this.validations.value);
-        this.textFieldValues.radioOptions = this.radioOptions.value;
-        this.textArray = [...this.textArray, {...this.textFieldValues}];
-        this.formValueToJson = this.inputDataForm.value;
-        this.validations.reset();
-        this.inputDataForm.reset();
+      if(!this.isCheckBoxRadioSelected()) {
+        if(this.f['type'].value && this.f['label'].value && this.f['placeholder'].value) {
+          this.saveData()
+        }
+        else {
+          this.inputDataForm.markAllAsTouched();
+        }
       }
       else {
-        this.inputDataForm.markAllAsTouched();
+        if(this.f['type'].value === 'checkbox') {
+          if(this.f['label'].value) {
+           this.saveData()
+          }
+          else {
+            this.f['label'].markAsTouched();
+          }
+        }
+        if(this.f['type'].value === 'radio') {
+          if(this.radioOptions.value) {
+            this.saveData()
+          }
+          else {
+            this.radioOptions.markAllAsTouched();
+          }
+        }
       }
     }
     else {
@@ -162,6 +172,24 @@ export class FormBuilderComponent implements OnInit {
 
   removeTextField(index: number) {
     this.textArray.splice(index, 1);
+  }
+
+  saveData() {
+    this.confirm();
+    this.textFieldValues = new TextFieldAttributes();
+    this.textFieldValues.type = this.inputDataForm.controls['type'].value;
+    this.textFieldValues.label = this.inputDataForm.controls['label'].value;
+    this.textFieldValues.placeholder = this.inputDataForm.controls['placeholder'].value;
+    this.textFieldValues.validations.next(this.validations.value);
+    this.textFieldValues.radioOptions = this.radioOptions.value;
+    this.textArray = [...this.textArray, {...this.textFieldValues}];
+    this.formValueToJson = this.inputDataForm.value;
+    this.validations.reset();
+    this.inputDataForm.reset();
+  }
+
+  isCheckBoxRadioSelected() {
+    return ['checkbox', 'radio'].includes(this.f['type'].value);
   }
 
 }
