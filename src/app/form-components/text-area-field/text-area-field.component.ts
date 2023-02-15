@@ -41,23 +41,22 @@ export class TextAreaFieldComponent implements OnInit {
 
   initValidations(validations: any[]) {
     validations.map(val => {
-      if(val.required === true) {
-        this.f.addValidators(Validators.required);
+      if(val.required === true && val.maxlength && val.minlength) {
+        this.f.setValidators([
+          Validators.required,
+          Validators.maxLength(Number(val.maxlength)),
+          Validators.minLength(Number(val.minlength))
+        ]);
         this.requiredValidation.validationType = 'required';
         this.requiredValidation.validationMessage = val.requiredMessage;
-        this.f.updateValueAndValidity()
-      }
-      if(val.maxlength) {
-        this.f.addValidators(Validators.maxLength(Number(val.maxlength)));
         this.maxLengthValidation.validationType = 'maxlength'
         val.maxLengthMessage ? this.maxLengthValidation.validationMessage = val.maxLengthMessage : this.maxLengthValidation.validationMessage = `A maximum of ${val.maxlength} characters are allowed`;
-        this.f.updateValueAndValidity()
-      }
-      if(val.minlength) {
-        this.f.addValidators(Validators.minLength(Number(val.minlength)));
         this.minLengthValidation.validationType = 'minlength';
         val.minLengthMessage ? this.minLengthValidation.validationMessage = val.minLengthMessage : this.minLengthValidation.validationMessage = `Please provide at least ${val.minlength} characters`;
         this.f.updateValueAndValidity()
+      }
+      else {
+        this.f.clearValidators();
       }
     })
   }

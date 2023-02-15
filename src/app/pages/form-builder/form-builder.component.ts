@@ -73,6 +73,10 @@ export class FormBuilderComponent implements OnInit {
     return this.inputDataForm.controls['radioOptions'] as FormArray
   }
 
+  get f() {
+    return this.inputDataForm.controls;
+  }
+
   addMoreOptions() {
     const itemForm = this.fb.group({
       radioLabel: [null],
@@ -98,17 +102,22 @@ export class FormBuilderComponent implements OnInit {
 
   submitForm() {
     if(this.editMode.value === false) {
-      this.confirm();
-      this.textFieldValues = new TextFieldAttributes();
-      this.textFieldValues.type = this.inputDataForm.controls['type'].value;
-      this.textFieldValues.label = this.inputDataForm.controls['label'].value;
-      this.textFieldValues.placeholder = this.inputDataForm.controls['placeholder'].value;
-      this.textFieldValues.validations.next(this.validations.value);
-      this.textFieldValues.radioOptions = this.radioOptions.value;
-      this.textArray = [...this.textArray, {...this.textFieldValues}];
-      this.formValueToJson = this.inputDataForm.value;
-      this.validations.reset();
-      this.inputDataForm.reset();
+      if(this.f['type'].value && this.f['label'].value && this.f['placeholder'].value) {
+        this.confirm();
+        this.textFieldValues = new TextFieldAttributes();
+        this.textFieldValues.type = this.inputDataForm.controls['type'].value;
+        this.textFieldValues.label = this.inputDataForm.controls['label'].value;
+        this.textFieldValues.placeholder = this.inputDataForm.controls['placeholder'].value;
+        this.textFieldValues.validations.next(this.validations.value);
+        this.textFieldValues.radioOptions = this.radioOptions.value;
+        this.textArray = [...this.textArray, {...this.textFieldValues}];
+        this.formValueToJson = this.inputDataForm.value;
+        this.validations.reset();
+        this.inputDataForm.reset();
+      }
+      else {
+        this.inputDataForm.markAllAsTouched();
+      }
     }
     else {
       this.saveEditModal(this.editIndex)
